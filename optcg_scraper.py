@@ -24,7 +24,8 @@ def build_card_set_codes():
     return set_codes
 
 if __name__ == "__main__":
-    set_codes = build_card_set_codes()
+    # set_codes = build_card_set_codes()
+    set_codes = {"OP15": "569115"}
     for set_name, set_code in set_codes.items():
         print(f"Fetching cards for set: {set_name} (code: {set_code})")
         response = requests.get(OPTCG_BASE_URL + set_code)
