@@ -101,7 +101,7 @@ def update_cards_from_html(cards, set, soup):
                             {
                                 "alt_code": tag["id"],
                                 "set": format_card_data(tag.find("div", class_="getInfo").h3.next_sibling),
-                                "img_path": tag.find("div", class_="frontCol").img["data-src"],
+                                "img_path": tag.find("div", class_="frontCol").img["data-src"].strip("../").split("?")[0],  # Remove any query parameters after the .png extension  
                                 "artist": ""
                             }
                         ]
@@ -110,7 +110,7 @@ def update_cards_from_html(cards, set, soup):
                     cards[card_code]["alts"].append({
                         "alt_code": tag["id"],
                         "set": format_card_data(tag.find("div", class_="getInfo").h3.next_sibling),
-                        "img_path": tag.find("div", class_="frontCol").img["data-src"],
+                        "img_path": tag.find("div", class_="frontCol").img["data-src"].strip("../").split("?")[0],  # Remove any query parameters after the .png extension
                         "artist": ""
                     })
                 continue
@@ -139,6 +139,7 @@ def update_cards_from_html(cards, set, soup):
             if tag.find("div", class_="remarks"):
                 card["notes"] = format_card_data(tag.find("div", class_="remarks").h3.next_sibling.text)
             card["img_path"] = tag.find("div", class_="frontCol").img["data-src"]
+            card["img_path"] = card["img_path"].replace("../", "").split("?")[0]  # Remove any query parameters after the .png extension
             card["artist"] = ""
 
             if card_code in cards:
@@ -168,5 +169,5 @@ def format_card_data(str):
 
 if __name__ == "__main__":
     cards = generate_cardlist(all_sets())
-    with open(f"./optcg_info.json", "w", encoding="utf-8") as f:
+    with open(f"./optcg_cards.json", "w", encoding="utf-8") as f:
         json.dump(cards, f)
